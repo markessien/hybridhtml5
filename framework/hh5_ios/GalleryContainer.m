@@ -13,6 +13,7 @@
 
 @synthesize itemPages;
 @synthesize scrollView;
+@synthesize pageNames;
 
 #define NUM_PAGES 5
 
@@ -25,6 +26,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
+    self.pageNames = [[NSMutableArray alloc] init];
+    
     // Initialise the scrollview with some 'normal' parameters
     self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
     [self.scrollView  setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
@@ -48,8 +51,10 @@
 
 - (void)createWebViews  {
 
-    if (self.itemPages == nil)
+    if (self.itemPages == nil) {
         self.itemPages = [[NSMutableArray alloc] init];
+        
+    }
 	else
         return; // function called twice
 	
@@ -64,11 +69,61 @@
 			frame.origin.y = 0;
 			page.view.frame = frame;
 			[scrollView addSubview:page.view];
+            [self loadPageAtIndex:i];
 		}
     }
 
-	
 	scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * NUM_PAGES, scrollView.frame.size.height - 100);
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)sv {
+    
+	CGFloat pageWidth = scrollView.frame.size.width;
+	curPage = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+	
+	if (curPage != lastPage)
+	{
+		lastPage = curPage;
+		[NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(loadNextPages) userInfo:nil repeats:NO];
+	}
+}
+
+- (void)loadNextPages 
+{
+	[self loadPageAtIndex: curPage];
+	[self loadPageAtIndex: curPage+1];
+	[self loadPageAtIndex: curPage-1];
+}
+
+- (void)loadPageAtIndex:(int) i {
+    
+	if (i < 0) return;
+    if (i >= [self.pageNames count]) return;
+	
+	int selPage = i % NUM_PAGES;
+	
+    // replace the placeholder if necessary
+    ItemPage *page = [itemPages objectAtIndex:selPage];
+	if (page == nil)
+	{		
+        NSLog(@"BUG!!!");
+	}
+	
+	[page loadPage:[pageNames objectAtIndex:i]];
+	// [page resizeObjects];
+	
+    CGRect frame = scrollView.frame;
+    frame.origin.x = frame.size.width * i;
+    frame.origin.y = 0;
+    page.view.frame = frame;
+	
+	scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * [pageNames count], scrollView.frame.size.height - 100);
+    
+	// NSLog(@"Exit loadRecipe");
+}
+
+- (void) addPage:(NSString*)pageName {
+    [pageNames addObject:pageName];
 }
 
 - (void)didReceiveMemoryWarning {

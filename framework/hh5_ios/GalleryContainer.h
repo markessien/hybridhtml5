@@ -12,13 +12,17 @@
 {
     UIScrollView *scrollView;
     NSMutableArray *itemPages;
+    NSMutableArray *pageNames;
+    int curPage;
+    int lastPage;
 }
 
+@property (nonatomic, retain) NSMutableArray *pageNames;
 @property (nonatomic, retain) NSMutableArray *itemPages;
 @property (nonatomic, retain) UIScrollView   *scrollView;
 
-- (void) loadPageAtIndex:(int) i;
-- (void) loadNextPages;
 - (void) createWebViews;
+- (void) addPage:(NSString*)pageName;
+- (void) loadPageAtIndex:(int)i;
 
 @end

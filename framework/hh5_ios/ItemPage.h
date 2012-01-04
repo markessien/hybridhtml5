@@ -15,4 +15,6 @@
 
 @property (nonatomic, retain) UIWebView *webView;
 
+- (void) loadPage:(NSString*)pageName;
+
 @end

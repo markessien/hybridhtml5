@@ -24,8 +24,20 @@
     self.view.autoresizesSubviews = YES;
     
     self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+    [self.webView  setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     // self.webView.delegate = self;
     [self.view addSubview:webView];
 }
 
+- (void) loadPage:(NSString*)pageName {
+    
+    NSString* path    = [[NSBundle mainBundle] bundlePath];
+	NSURL*    baseURL = [NSURL fileURLWithPath:path];	
+	
+	NSString *p = [pageName stringByReplacingOccurrencesOfString:@".html" withString:@""]; 
+	NSString *filePath = [[NSBundle mainBundle] pathForResource:p ofType:@"html"];
+	NSString *htmlData = [NSString stringWithContentsOfFile:filePath];
+	
+    [self.webView loadHTMLString:htmlData baseURL:baseURL];
+}
 @end
