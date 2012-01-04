@@ -17,8 +17,9 @@
 
 #define NUM_PAGES 5
 
+
 - (void)loadView {
-    self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+    self.view = [[UIView alloc] initWithFrame:CGRectZero];
 	self.view.backgroundColor = [UIColor blueColor];
 }
 
@@ -51,8 +52,6 @@
 
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    NSLog(@"I have finished rotating");
-   // self.viewframe = self
     scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * NUM_PAGES, scrollView.frame.size.height);
 }
 
@@ -77,7 +76,7 @@
 			page.view.frame = frame;
             
 			[scrollView addSubview:page.view];
-            [page.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+            // [page.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
             [self loadPageAtIndex:i];
 		}
     }
@@ -126,7 +125,7 @@
     frame.origin.y = 0;
     page.view.frame = frame;
 	
-	scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * [pageNames count], scrollView.frame.size.height - 100);
+	scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * [pageNames count], scrollView.frame.size.height );
     
 	// NSLog(@"Exit loadRecipe");
 }
