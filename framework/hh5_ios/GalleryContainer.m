@@ -42,11 +42,18 @@
     [self.view addSubview:scrollView];
     
     // pre-initialise with 5 pages
-	scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * NUM_PAGES, scrollView.frame.size.height - 100);
+	scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * NUM_PAGES, scrollView.frame.size.height);
     
     // create the webviews. To avoid a slow-down while launching, we do this with a timer
 	[NSTimer scheduledTimerWithTimeInterval:0.01 target:self 
              selector:@selector(createWebViews) userInfo:nil repeats:NO];
+}
+
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    NSLog(@"I have finished rotating");
+   // self.viewframe = self
+    scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * NUM_PAGES, scrollView.frame.size.height);
 }
 
 - (void)createWebViews  {
@@ -62,18 +69,20 @@
     for (unsigned i = 0; i < 5; i++) {
 		ItemPage* page = [[ItemPage alloc] init];
         [itemPages addObject:page];
-		
+    
 		if (nil == page.view.superview) {
 			CGRect frame = scrollView.frame;
 			frame.origin.x = frame.size.width * i;
 			frame.origin.y = 0;
 			page.view.frame = frame;
+            
 			[scrollView addSubview:page.view];
+            [page.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
             [self loadPageAtIndex:i];
 		}
     }
 
-	scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * NUM_PAGES, scrollView.frame.size.height - 100);
+	scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * NUM_PAGES, scrollView.frame.size.height);
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)sv {
