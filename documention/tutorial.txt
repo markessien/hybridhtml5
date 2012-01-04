@@ -1,0 +1,8 @@
+Help Files
+
+To Make an iPad app with XCode4.
+
+- Create new project and select Single view Application
+- Drag hh5_ios into your project, without copying it
+- Locate the container you want, for example GalleryContainer
+- Instanciate this container in the view you want to place it in
