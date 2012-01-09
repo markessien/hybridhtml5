@@ -8,12 +8,16 @@
 
 #import "GalleryContainer.h"
 #import "ItemPage.h"
+#import "TableOfContents.h"
 
 @implementation GalleryContainer
 
 @synthesize itemPages;
 @synthesize scrollView;
 @synthesize pageNames;
+@synthesize toolBar;
+@synthesize popoverController;
+@synthesize tocButton;
 
 #define NUM_PAGES 5
 
@@ -48,6 +52,72 @@
     // create the webviews. To avoid a slow-down while launching, we do this with a timer
 	[NSTimer scheduledTimerWithTimeInterval:0.01 target:self 
              selector:@selector(createWebViews) userInfo:nil repeats:NO];
+
+}
+
+- (void) loadToolbar {
+    
+    
+    CGRect rcToolbar;
+    rcToolbar.origin.x = 0;
+    rcToolbar.origin.y = 0;
+    rcToolbar.size.width = self.view.frame.size.width;
+    rcToolbar.size.height = 50;
+    toolBar = [[UIToolbar alloc] initWithFrame:rcToolbar];
+    toolBar.translucent = YES;
+    toolBar.tintColor = [UIColor blackColor];
+    [self.view addSubview:toolBar];
+    
+    NSMutableArray* items = [[NSMutableArray alloc] init];
+    
+    // UIBarButtonItem* favButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringFromTable(@"Favorite", @"fmlib", @"fmlib stuff") style:UIBarButtonItemStylePlain target:nil action:nil];
+    
+    // [UIImage imageNamed:@"heart_empty.png"] 
+    self.tocButton = [[UIBarButtonItem alloc] initWithTitle:@"Recipes" style:UIBarButtonItemStyleBordered target:self action:@selector(buttonClicked:)];
+    [items addObject:self.tocButton];
+    
+    
+    UIBarButtonItem* spaceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    [items addObject:spaceButton];
+    
+    
+    UIBarButtonItem* shareButton = [[UIBarButtonItem alloc] initWithTitle:@"Share..." style:UIBarButtonItemStyleBordered target:nil action:@selector(onShowShareWindowClicked)];
+    [items addObject:shareButton];
+    
+    //spaceButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];;
+    //[items addObject:spaceButton];
+    
+    [toolBar setItems:items];
+    
+    // [self startFadeTimer];
+    
+}
+
+-(void)buttonClicked:(id)sender {
+    
+    if (self.popoverController == nil) {
+        TableOfContents *toc = [[TableOfContents alloc] initWithNibName:@"TableOfContents" bundle:[NSBundle mainBundle]]; 
+        toc.listOfFiles = self.pageNames;
+        
+        UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:toc]; 
+        
+        popover.delegate = self;
+        
+        self.popoverController = popover;
+    }
+    
+    CGRect rc = CGRectMake(0, 0, 100, 100);
+   
+    //UIView* btn = [[event.allTouches anyObject] view];
+    //CGRect popoverRect = [self.view convertRect:[btn frame] 
+    //                                   fromView:[btn superview]];
+    
+    // popoverRect.size.width = 100; 
+    [self.popoverController 
+     presentPopoverFromRect:rc 
+     inView:self.view 
+     permittedArrowDirections:UIPopoverArrowDirectionAny 
+     animated:YES];
 }
 
 
@@ -82,6 +152,8 @@
     }
 
 	scrollView.contentSize = CGSizeMake(scrollView.frame.size.width * NUM_PAGES, scrollView.frame.size.height);
+    
+    [self loadToolbar];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)sv {

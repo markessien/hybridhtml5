@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface GalleryContainer : UIViewController<UIScrollViewDelegate>
+@interface GalleryContainer : UIViewController<UIScrollViewDelegate, UIPopoverControllerDelegate>
 {
+    UIPopoverController *popoverController;
+    UIBarButtonItem* tocButton;
+    UIToolbar* toolBar;
     UIScrollView *scrollView;
     NSMutableArray *itemPages;
     NSMutableArray *pageNames;
@@ -17,6 +20,9 @@
     int lastPage;
 }
 
+@property (nonatomic, retain) UIBarButtonItem *tocButton;
+@property (nonatomic, retain) UIPopoverController *popoverController;
+@property (nonatomic, retain) UIToolbar *toolBar;
 @property (nonatomic, retain) NSMutableArray *pageNames;
 @property (nonatomic, retain) NSMutableArray *itemPages;
 @property (nonatomic, retain) UIScrollView   *scrollView;
@@ -24,5 +30,7 @@
 - (void) createWebViews;
 - (void) addPage:(NSString*)pageName;
 - (void) loadPageAtIndex:(int)i;
+- (void) loadToolbar;
+- (void) buttonClicked:(id)sender;
 
 @end
