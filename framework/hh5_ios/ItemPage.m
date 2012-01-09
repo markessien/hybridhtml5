@@ -23,10 +23,19 @@
 	self.view.backgroundColor = [UIColor yellowColor];
     self.view.autoresizesSubviews = YES;
     
+    
     self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     [self.webView  setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     // self.webView.delegate = self;
     [self.view addSubview:webView];
+    
+    // Disable webview scrolling
+    UIView * v = [[webView subviews] lastObject];
+    if([v isKindOfClass:[UIScrollView class] ]) {
+        UIScrollView* sv = (UIScrollView*)v;
+        [sv setScrollEnabled:NO];
+        [sv setBounces:NO];
+    }
 }
 
 - (void) loadPage:(NSString*)pageName {
@@ -36,7 +45,7 @@
 	
 	NSString *p = [pageName stringByReplacingOccurrencesOfString:@".html" withString:@""]; 
 	NSString *filePath = [[NSBundle mainBundle] pathForResource:p ofType:@"html"];
-	NSString *htmlData = [NSString stringWithContentsOfFile:filePath];
+	NSString *htmlData = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
 	
     [self.webView loadHTMLString:htmlData baseURL:baseURL];
 }
