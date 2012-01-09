@@ -47,7 +47,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
 
-    cell.textLabel.text = [listOfFiles objectAtIndex:indexPath.row];
+    cell.textLabel.text = [[listOfFiles objectAtIndex:indexPath.row] objectForKey:@"Title"];
     
     return cell;
 }

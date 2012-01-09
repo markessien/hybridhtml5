@@ -81,9 +81,10 @@
     [items addObject:spaceButton];
     
     
+    /*
     UIBarButtonItem* shareButton = [[UIBarButtonItem alloc] initWithTitle:@"Share..." style:UIBarButtonItemStyleBordered target:nil action:@selector(onShowShareWindowClicked)];
     [items addObject:shareButton];
-    
+    */
     //spaceButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];;
     //[items addObject:spaceButton];
     
@@ -100,23 +101,18 @@
         toc.listOfFiles = self.pageNames;
         
         UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:toc]; 
-        
         popover.delegate = self;
         
         self.popoverController = popover;
     }
     
-    CGRect rc = CGRectMake(0, 0, 100, 100);
+    CGRect rc = CGRectMake(0, 20, 100, 20);
    
-    //UIView* btn = [[event.allTouches anyObject] view];
-    //CGRect popoverRect = [self.view convertRect:[btn frame] 
-    //                                   fromView:[btn superview]];
-    
-    // popoverRect.size.width = 100; 
+
     [self.popoverController 
      presentPopoverFromRect:rc 
      inView:self.view 
-     permittedArrowDirections:UIPopoverArrowDirectionAny 
+     permittedArrowDirections:UIPopoverArrowDirectionUp 
      animated:YES];
 }
 
@@ -189,7 +185,7 @@
         NSLog(@"BUG!!!");
 	}
 	
-	[page loadPage:[pageNames objectAtIndex:i]];
+	[page loadPage:[[pageNames objectAtIndex:i] objectForKey:@"File"]];
 	// [page resizeObjects];
 	
     CGRect frame = scrollView.frame;
@@ -203,7 +199,21 @@
 }
 
 - (void) addPage:(NSString*)pageName {
-    [pageNames addObject:pageName];
+    
+    NSURL *url = [[NSBundle mainBundle] URLForResource:[pageName stringByDeletingPathExtension] withExtension:@"html"];
+    NSString *html = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
+    
+    NSString *title = @"No Title";
+    NSScanner *theScanner = [NSScanner scannerWithString:html];
+    [theScanner scanUpToString:@"<title" intoString:nil];
+    if (![theScanner isAtEnd]) {
+        [theScanner scanUpToString:@">" intoString:nil];
+        [theScanner setScanLocation:theScanner.scanLocation+1];
+        [theScanner scanUpToString:@"</" intoString:&title];
+    }
+    
+    NSDictionary* pageInfo = [[NSDictionary alloc] initWithObjectsAndKeys:pageName, @"File", title, @"Title", nil];
+    [pageNames addObject:pageInfo];
 }
 
 - (void)didReceiveMemoryWarning {
