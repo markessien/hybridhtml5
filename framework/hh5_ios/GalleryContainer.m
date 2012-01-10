@@ -24,7 +24,7 @@
 
 - (void)loadView {
     self.view = [[UIView alloc] initWithFrame:CGRectZero];
-	self.view.backgroundColor = [UIColor blueColor];
+	self.view.backgroundColor = [UIColor blackColor];
 }
 
 
@@ -94,11 +94,19 @@
     
 }
 
+-(void)selectedIndex:(int)i {
+    
+    int pos = i * scrollView.frame.size.width;
+    [scrollView setContentOffset:CGPointMake(pos, 0)];
+    [self.popoverController dismissPopoverAnimated:NO];
+}
+
 -(void)buttonClicked:(id)sender {
     
     if (self.popoverController == nil) {
         TableOfContents *toc = [[TableOfContents alloc] initWithNibName:@"TableOfContents" bundle:[NSBundle mainBundle]]; 
         toc.listOfFiles = self.pageNames;
+        toc.delegate = self;
         
         UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:toc]; 
         popover.delegate = self;

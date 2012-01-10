@@ -10,7 +10,7 @@
 
 @implementation TableOfContents
 
-@synthesize listOfFiles;
+@synthesize listOfFiles, delegate;
 
 - (id) initWithTable:(NSArray*)itemArray {
     
@@ -62,6 +62,8 @@
     appDelegate.viewController.detailItem = 
     [listOfMovies objectAtIndex:indexPath.row];    
      */
+    
+    [delegate selectedIndex:indexPath.row];   
     
 }
 

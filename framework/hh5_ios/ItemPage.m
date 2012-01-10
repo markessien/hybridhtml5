@@ -20,7 +20,7 @@
 - (void)loadView
 {
     self.view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-	self.view.backgroundColor = [UIColor yellowColor];
+	self.view.backgroundColor = [UIColor blackColor];
     self.view.autoresizesSubviews = YES;
     
     

@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TableOfContents.h"
 
-@interface GalleryContainer : UIViewController<UIScrollViewDelegate, UIPopoverControllerDelegate>
+@interface GalleryContainer : UIViewController<UIScrollViewDelegate, UIPopoverControllerDelegate, TableOfContentsDelegate>
 {
     UIPopoverController *popoverController;
     UIBarButtonItem* tocButton;
@@ -19,6 +20,7 @@
     int curPage;
     int lastPage;
 }
+
 
 @property (nonatomic, retain) UIBarButtonItem *tocButton;
 @property (nonatomic, retain) UIPopoverController *popoverController;
@@ -32,5 +34,6 @@
 - (void) loadPageAtIndex:(int)i;
 - (void) loadToolbar;
 - (void) buttonClicked:(id)sender;
+- (void) selectedIndex:(int)i;
 
 @end

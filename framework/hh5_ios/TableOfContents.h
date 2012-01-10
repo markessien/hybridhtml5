@@ -8,14 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol TableOfContentsDelegate<NSObject>
+@optional
+    - (void) selectedIndex:(int)i;
+@end
+
 @interface TableOfContents : UITableViewController {
 
     NSArray *listOfFiles;
+    id delegate;
 }
 
 - (id)initWithTable:(NSArray*)itemArray;
 
 @property (nonatomic, retain) NSArray *listOfFiles;
-
+@property (nonatomic, retain) id<TableOfContentsDelegate> delegate;
 
 @end
