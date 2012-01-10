@@ -99,6 +99,11 @@
     int pos = i * scrollView.frame.size.width;
     [scrollView setContentOffset:CGPointMake(pos, 0)];
     [self.popoverController dismissPopoverAnimated:NO];
+    
+    CGFloat pageWidth = scrollView.frame.size.width;
+	curPage = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+    
+    [self loadPageAtIndex: curPage];
 }
 
 -(void)buttonClicked:(id)sender {
